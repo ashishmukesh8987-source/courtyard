@@ -3,3 +3,10 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
 }
+
+/* Prevent iOS auto-zoom on input focus */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}

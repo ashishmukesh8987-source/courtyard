@@ -5,14 +5,16 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth";
-import { onOrdersForShop, updateOrderStatus } from "@/lib/firestore";
+import { onOrdersForShop, onWaiterCallsForShop, acknowledgeWaiterCall } from "@/lib/firestore";
+import type { WaiterCall } from "@/lib/firestore";
+import { getAuthHeaders } from "@/lib/api-client";
 import { formatPrice, formatDate } from "@/lib/utils";
 import type { Order, OrderStatus } from "@/types";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Spinner from "@/components/ui/Spinner";
-import { LogOut, UtensilsCrossed, Phone, Hash, User, Clock } from "lucide-react";
+import { LogOut, UtensilsCrossed, Phone, Hash, User, Clock, Bell, X } from "lucide-react";
 
 const nextStatus: Partial<Record<OrderStatus, OrderStatus>> = {
   pending: "preparing",
@@ -30,6 +32,7 @@ export default function ShopDashboardPage() {
   const router = useRouter();
   const { appUser, loading: authLoading, signOut } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
+  const [waiterCalls, setWaiterCalls] = useState<WaiterCall[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"active" | "completed" | "all">("active");
 
@@ -39,11 +42,14 @@ export default function ShopDashboardPage() {
       router.push("/shop/login");
       return;
     }
-    const unsub = onOrdersForShop(appUser.shopId, (data) => {
+    const unsubOrders = onOrdersForShop(appUser.shopId, (data) => {
       setOrders(data);
       setLoading(false);
     });
-    return unsub;
+    const unsubCalls = onWaiterCallsForShop(appUser.shopId, (data) => {
+      setWaiterCalls(data);
+    });
+    return () => { unsubOrders(); unsubCalls(); };
   }, [appUser, authLoading, router]);
 
   if (authLoading || loading) return <Spinner className="min-h-screen" />;
@@ -58,7 +64,13 @@ export default function ShopDashboardPage() {
 
   async function handleStatusChange(orderId: string, status: OrderStatus) {
     try {
-      await updateOrderStatus(orderId, status);
+      const headers = await getAuthHeaders();
+      const res = await fetch("/api/orders/update-status", {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({ orderId, status }),
+      });
+      if (!res.ok) throw new Error();
       toast.success(`Order updated to ${status}`);
     } catch {
       toast.error("Failed to update order");
@@ -67,7 +79,13 @@ export default function ShopDashboardPage() {
 
   async function handleCancel(orderId: string) {
     try {
-      await updateOrderStatus(orderId, "cancelled");
+      const headers = await getAuthHeaders();
+      const res = await fetch("/api/orders/update-status", {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({ orderId, status: "cancelled" }),
+      });
+      if (!res.ok) throw new Error();
       toast.success("Order cancelled");
     } catch {
       toast.error("Failed to cancel order");
@@ -91,6 +109,9 @@ export default function ShopDashboardPage() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
+            <Link href="/shop/dashboard/insights">
+              <Button variant="secondary" size="sm">Insights</Button>
+            </Link>
             <Link href="/shop/dashboard/menu">
               <Button variant="secondary" size="sm">Menu</Button>
             </Link>
@@ -119,6 +140,40 @@ export default function ShopDashboardPage() {
           ))}
         </div>
       </div>
+
+      {/* Waiter Calls */}
+      {waiterCalls.length > 0 && (
+        <div className="mx-auto max-w-3xl px-4 pt-4">
+          <div className="space-y-2">
+            {waiterCalls.map((call) => (
+              <div
+                key={call.id}
+                className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 animate-pulse"
+              >
+                <div className="flex items-center gap-3">
+                  <Bell className="w-5 h-5 text-amber-600" />
+                  <div>
+                    <p className="text-sm font-semibold text-amber-800">
+                      Waiter needed at Table {call.tableNumber}
+                    </p>
+                    <p className="text-xs text-amber-600">{formatDate(call.createdAt)}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={async () => {
+                    await acknowledgeWaiterCall(call.id);
+                    toast.success("Acknowledged");
+                  }}
+                  className="p-1.5 text-amber-500 hover:text-amber-700 hover:bg-amber-100 rounded-lg transition-colors"
+                  title="Acknowledge"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Orders */}
       <div className="mx-auto max-w-3xl px-4 py-4 space-y-3">

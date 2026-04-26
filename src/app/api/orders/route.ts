@@ -1,16 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initializeApp, getApps, cert } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-
-// Initialize Firebase Admin (server-side only)
-function getAdminDb() {
-  if (getApps().length === 0) {
-    initializeApp({
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    });
-  }
-  return getFirestore();
-}
+import { getAdminDb } from "@/lib/firebase-admin";
 
 interface OrderItem {
   itemId: string;
@@ -20,7 +9,7 @@ interface OrderItem {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { shopId, courtyardId, customerName, customerPhone, tableNumber, items } = body;
+    const { shopId, courtyardId, customerName, customerPhone, tableNumber, items, customerUid } = body;
 
     // Input validation
     if (!shopId || typeof shopId !== "string") {
@@ -60,17 +49,15 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Invalid item ID" }, { status: 400 });
       }
       if (!item.quantity || typeof item.quantity !== "number" || item.quantity < 1 || item.quantity > 99 || !Number.isInteger(item.quantity)) {
-        return NextResponse.json({ error: `Invalid quantity for item` }, { status: 400 });
+        return NextResponse.json({ error: "Invalid quantity for item" }, { status: 400 });
       }
 
       const menuItemDoc = await db.collection("menuItems").doc(item.itemId).get();
       if (!menuItemDoc.exists) {
-        return NextResponse.json({ error: `Menu item not found: ${item.itemId}` }, { status: 404 });
+        return NextResponse.json({ error: "Menu item not found" }, { status: 404 });
       }
 
       const menuItem = menuItemDoc.data()!;
-
-      // Verify item belongs to this shop and is available
       if (menuItem.shopId !== shopId) {
         return NextResponse.json({ error: "Item does not belong to this shop" }, { status: 400 });
       }
@@ -78,19 +65,17 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: `${menuItem.name} is no longer available` }, { status: 400 });
       }
 
-      const serverPrice = menuItem.price;
-      calculatedTotal += serverPrice * item.quantity;
-
+      calculatedTotal += menuItem.price * item.quantity;
       validatedItems.push({
         itemId: item.itemId,
         name: menuItem.name,
-        price: serverPrice,
+        price: menuItem.price,
         quantity: item.quantity,
       });
     }
 
     // Create order with server-validated data
-    const orderData = {
+    const orderData: Record<string, unknown> = {
       shopId,
       shopName,
       courtyardId,
@@ -99,10 +84,15 @@ export async function POST(req: NextRequest) {
       customerPhone: customerPhone.trim().replace(/\D/g, ""),
       items: validatedItems,
       total: calculatedTotal,
-      status: "pending" as const,
+      status: "pending",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+
+    // Store customer UID if signed in (for order history)
+    if (customerUid && typeof customerUid === "string") {
+      orderData.customerUid = customerUid;
+    }
 
     const orderRef = await db.collection("orders").add(orderData);
 

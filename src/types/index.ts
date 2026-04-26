@@ -51,6 +51,7 @@ export interface Order {
   tableNumber: string;
   customerName: string;
   customerPhone: string;
+  customerUid?: string;
   items: OrderItem[];
   total: number;
   status: OrderStatus;

@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth";
-import {
-  getMenuItemsByShop,
-  createMenuItem,
-  updateMenuItem,
-  deleteMenuItem,
-} from "@/lib/firestore";
+import { getAuthHeaders } from "@/lib/api-client";
 import { formatPrice } from "@/lib/utils";
 import type { MenuItem } from "@/types";
 import Card from "@/components/ui/Card";
@@ -45,8 +40,15 @@ export default function MenuManagementPage() {
 
   async function loadMenu() {
     if (!appUser?.shopId) return;
-    const data = await getMenuItemsByShop(appUser.shopId);
-    setItems(data);
+    try {
+      const headers = await getAuthHeaders();
+      const res = await fetch("/api/menu", { headers });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setItems(data.items as MenuItem[]);
+    } catch {
+      toast.error("Failed to load menu");
+    }
     setLoading(false);
   }
 
@@ -81,25 +83,33 @@ export default function MenuManagementPage() {
 
     setSaving(true);
     try {
+      const headers = await getAuthHeaders();
       if (editingId) {
-        await updateMenuItem(editingId, {
-          name: name.trim(),
-          price: priceNum,
-          category: category.trim() || "General",
-          description: description.trim(),
+        const res = await fetch("/api/menu", {
+          method: "PUT",
+          headers,
+          body: JSON.stringify({
+            id: editingId,
+            name: name.trim(),
+            price: priceNum,
+            category: category.trim() || "General",
+            description: description.trim(),
+          }),
         });
+        if (!res.ok) throw new Error();
         toast.success("Item updated");
       } else {
-        await createMenuItem({
-          shopId: appUser!.shopId!,
-          courtyardId: appUser!.courtyardId!,
-          name: name.trim(),
-          price: priceNum,
-          category: category.trim() || "General",
-          description: description.trim(),
-          imageUrl: "",
-          isAvailable: true,
+        const res = await fetch("/api/menu", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            name: name.trim(),
+            price: priceNum,
+            category: category.trim() || "General",
+            description: description.trim(),
+          }),
         });
+        if (!res.ok) throw new Error();
         toast.success("Item added");
       }
       resetForm();
@@ -112,7 +122,13 @@ export default function MenuManagementPage() {
 
   async function handleToggleAvailability(item: MenuItem) {
     try {
-      await updateMenuItem(item.id, { isAvailable: !item.isAvailable });
+      const headers = await getAuthHeaders();
+      const res = await fetch("/api/menu", {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({ id: item.id, isAvailable: !item.isAvailable }),
+      });
+      if (!res.ok) throw new Error();
       toast.success(item.isAvailable ? "Item hidden" : "Item visible");
       await loadMenu();
     } catch {
@@ -123,7 +139,9 @@ export default function MenuManagementPage() {
   async function handleDelete(id: string) {
     if (!confirm("Delete this item?")) return;
     try {
-      await deleteMenuItem(id);
+      const headers = await getAuthHeaders();
+      const res = await fetch(`/api/menu?id=${id}`, { method: "DELETE", headers });
+      if (!res.ok) throw new Error();
       toast.success("Item deleted");
       await loadMenu();
     } catch {
@@ -184,12 +202,36 @@ export default function MenuManagementPage() {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                 />
-                <Input
-                  label="Category"
-                  placeholder="e.g. Starters"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                />
+                <div className="w-full">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-colors bg-white"
+                  >
+                    <option value="">Select category</option>
+                    <option value="Starters">Starters</option>
+                    <option value="Main Course">Main Course</option>
+                    <option value="Rice & Biryani">Rice & Biryani</option>
+                    <option value="Breads">Breads</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="South Indian">South Indian</option>
+                    <option value="Snacks">Snacks</option>
+                    <option value="Burgers & Wraps">Burgers & Wraps</option>
+                    <option value="Pizza & Pasta">Pizza & Pasta</option>
+                    <option value="Momos">Momos</option>
+                    <option value="Thali">Thali</option>
+                    <option value="Salads">Salads</option>
+                    <option value="Soups">Soups</option>
+                    <option value="Desserts">Desserts</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Shakes & Juices">Shakes & Juices</option>
+                    <option value="Combos">Combos</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
               </div>
               <Input
                 label="Description (optional)"

@@ -10,7 +10,8 @@ import type { Courtyard, Shop, MenuItem } from "@/types";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Spinner from "@/components/ui/Spinner";
-import { ArrowLeft, Plus, Minus, ShoppingBag, Search } from "lucide-react";
+import { ArrowLeft, Plus, Minus, ShoppingBag, Search, Bell } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function ShopMenuPage() {
   const { courtyardSlug, shopSlug } = useParams<{
@@ -25,6 +26,8 @@ export default function ShopMenuPage() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [callingWaiter, setCallingWaiter] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
   useEffect(() => {
     async function load() {
@@ -50,13 +53,21 @@ export default function ShopMenuPage() {
     );
   }
 
-  // Filter by search
-  const filtered = menuItems.filter((item) =>
-    search.trim() === "" ||
-    item.name.toLowerCase().includes(search.toLowerCase()) ||
-    (item.description && item.description.toLowerCase().includes(search.toLowerCase())) ||
-    (item.category && item.category.toLowerCase().includes(search.toLowerCase()))
-  );
+  // All unique categories
+  const allCategories = Array.from(
+    new Set(menuItems.map((item) => item.category || "Other"))
+  ).sort();
+
+  // Filter by search and category
+  const filtered = menuItems.filter((item) => {
+    const matchesSearch =
+      search.trim() === "" ||
+      item.name.toLowerCase().includes(search.toLowerCase()) ||
+      (item.description && item.description.toLowerCase().includes(search.toLowerCase()));
+    const matchesCategory =
+      selectedCategory === "All" || (item.category || "Other") === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   // Group by category
   const categories = filtered.reduce<Record<string, MenuItem[]>>((acc, item) => {
@@ -76,12 +87,42 @@ export default function ShopMenuPage() {
       {/* Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="mx-auto max-w-2xl px-4 py-4">
-          <Link
-            href={`/${courtyardSlug}`}
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-2"
-          >
-            <ArrowLeft className="w-4 h-4" /> {courtyard.name}
-          </Link>
+          <div className="flex items-center justify-between mb-2">
+            <Link
+              href={`/${courtyardSlug}`}
+              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+            >
+              <ArrowLeft className="w-4 h-4" /> {courtyard.name}
+            </Link>
+            <button
+              onClick={async () => {
+                const table = prompt("Enter your table number:");
+                if (!table || !table.trim()) return;
+                setCallingWaiter(true);
+                try {
+                  const res = await fetch("/api/waiter-call", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      shopId: shop!.id,
+                      courtyardId: courtyard!.id,
+                      tableNumber: table.trim(),
+                    }),
+                  });
+                  if (!res.ok) throw new Error();
+                  toast.success("Waiter has been notified! They'll be at your table shortly.");
+                } catch {
+                  toast.error("Failed to call waiter. Try again.");
+                }
+                setCallingWaiter(false);
+              }}
+              disabled={callingWaiter}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-orange-600 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors disabled:opacity-50"
+            >
+              <Bell className="w-4 h-4" />
+              {callingWaiter ? "Calling..." : "Call Waiter"}
+            </button>
+          </div>
           <h1 className="text-xl font-bold text-gray-900">{shop.name}</h1>
           {shop.description && (
             <p className="text-sm text-gray-500 mt-0.5">{shop.description}</p>
@@ -93,7 +134,7 @@ export default function ShopMenuPage() {
       <div className="mx-auto max-w-2xl px-4 py-6">
         {/* Search */}
         {menuItems.length > 0 && (
-          <div className="relative mb-5">
+          <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
@@ -102,6 +143,35 @@ export default function ShopMenuPage() {
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 transition-colors"
             />
+          </div>
+        )}
+
+        {/* Category Filter */}
+        {allCategories.length > 1 && (
+          <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-hide">
+            <button
+              onClick={() => setSelectedCategory("All")}
+              className={`flex-shrink-0 px-3 py-1.5 text-sm rounded-full font-medium transition-colors ${
+                selectedCategory === "All"
+                  ? "bg-orange-600 text-white"
+                  : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300"
+              }`}
+            >
+              All
+            </button>
+            {allCategories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`flex-shrink-0 px-3 py-1.5 text-sm rounded-full font-medium transition-colors ${
+                  selectedCategory === cat
+                    ? "bg-orange-600 text-white"
+                    : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
         )}
 

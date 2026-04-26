@@ -5,6 +5,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut as fbSignOut,
+  signInWithPopup,
+  GoogleAuthProvider,
   onAuthStateChanged,
   User,
 } from "firebase/auth";
@@ -18,7 +20,9 @@ interface AuthContextValue {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<User>;
+  signInWithGoogle: () => Promise<User>;
   signOut: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -56,8 +60,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAppUser(null);
   }, []);
 
+  const signInWithGoogle = useCallback(async () => {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    return result.user;
+  }, []);
+
+  const refreshUser = useCallback(async () => {
+    if (user) {
+      const profile = await getAppUser(user.uid);
+      setAppUser(profile);
+    }
+  }, [user]);
+
   return (
-    <AuthContext.Provider value={{ user, appUser, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, appUser, loading, signIn, signUp, signInWithGoogle, signOut, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

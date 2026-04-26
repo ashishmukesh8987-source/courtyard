@@ -6,12 +6,14 @@ import { getCourtyards } from "@/lib/firestore";
 import type { Courtyard } from "@/types";
 import Card from "@/components/ui/Card";
 import Spinner from "@/components/ui/Spinner";
-import { MapPin, UtensilsCrossed, Search } from "lucide-react";
+import { MapPin, UtensilsCrossed, Search, ShoppingBag } from "lucide-react";
+import { useAuth } from "@/lib/auth";
 
 export default function HomePage() {
   const [courtyards, setCourtyards] = useState<Courtyard[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const { user } = useAuth();
 
   useEffect(() => {
     getCourtyards().then((data) => {
@@ -75,6 +77,11 @@ export default function HomePage() {
         )}
 
         <div className="mt-16 flex justify-center gap-6 text-sm text-gray-400">
+          {user && (
+            <Link href="/my-orders" className="hover:text-orange-600 transition-colors flex items-center gap-1">
+              <ShoppingBag className="w-3.5 h-3.5" /> My Orders
+            </Link>
+          )}
           <Link href="/shop/login" className="hover:text-orange-600 transition-colors">
             Shop Login
           </Link>

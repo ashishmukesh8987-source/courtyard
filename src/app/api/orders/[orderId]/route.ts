@@ -1,15 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getApps, initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-
-function getAdminDb() {
-  if (getApps().length === 0) {
-    initializeApp({
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    });
-  }
-  return getFirestore();
-}
+import { getAdminDb } from "@/lib/firebase-admin";
+import { Timestamp } from "firebase-admin/firestore";
 
 export async function GET(
   req: NextRequest,
@@ -23,17 +14,26 @@ export async function GET(
 
   try {
     const db = getAdminDb();
-    const doc = await db.collection("orders").doc(orderId).get();
+    const orderDoc = await db.collection("orders").doc(orderId).get();
 
-    if (!doc.exists) {
+    if (!orderDoc.exists) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    const data = doc.data()!;
+    const data = orderDoc.data()!;
+
+    function toISO(ts: unknown): string {
+      if (ts instanceof Timestamp) return ts.toDate().toISOString();
+      if (ts instanceof Date) return ts.toISOString();
+      if (ts && typeof ts === "object" && "toDate" in ts) {
+        return (ts as { toDate: () => Date }).toDate().toISOString();
+      }
+      return new Date().toISOString();
+    }
 
     // Only return non-sensitive data for public tracking
     return NextResponse.json({
-      id: doc.id,
+      id: orderDoc.id,
       shopName: data.shopName,
       status: data.status,
       items: data.items.map((i: { name: string; quantity: number; price: number }) => ({
@@ -43,8 +43,8 @@ export async function GET(
       })),
       total: data.total,
       tableNumber: data.tableNumber,
-      createdAt: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
-      updatedAt: data.updatedAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+      createdAt: toISO(data.createdAt),
+      updatedAt: toISO(data.updatedAt),
     });
   } catch (err) {
     console.error("Failed to fetch order:", err);

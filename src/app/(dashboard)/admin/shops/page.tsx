@@ -7,23 +7,16 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth";
 import {
   getAllShopsByCourtyard,
-  createShop,
   updateShop,
   deleteShop,
-  setAppUser,
-  getCourtyardBySlug,
 } from "@/lib/firestore";
-import { slugify } from "@/lib/utils";
+import { getAuthHeaders } from "@/lib/api-client";
 import type { Shop } from "@/types";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Spinner from "@/components/ui/Spinner";
 import { ArrowLeft, Plus, Store, ToggleLeft, ToggleRight, Trash2 } from "lucide-react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
 export default function AdminShopsPage() {
   const router = useRouter();
@@ -67,37 +60,28 @@ export default function AdminShopsPage() {
 
     setSaving(true);
     try {
-      // Get courtyard slug
-      const q = query(collection(db, "courtyards"), where("adminUid", "==", appUser!.uid));
-      const snap = await getDocs(q);
-      const courtyardSlug = snap.docs[0]?.data()?.slug || "";
-
-      // Create shop owner account
-      // NOTE: In production, use Firebase Admin SDK via API route to avoid logging out current user
-      // For now, we create via a workaround — store current auth, create user, then re-sign in
-      const shopId = await createShop({
-        courtyardId: appUser!.courtyardId!,
-        courtyardSlug,
-        name: shopName.trim(),
-        slug: slugify(shopName.trim()),
-        description: shopDesc.trim(),
-        imageUrl: "",
-        ownerUid: "", // Will be updated after user creation
-        ownerEmail: ownerEmail.trim(),
-        isActive: true,
+      // Everything happens server-side: auth account + shop doc + user profile
+      const headers = await getAuthHeaders();
+      const res = await fetch("/api/admin/create-shop", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          shopName: shopName.trim(),
+          shopDesc: shopDesc.trim(),
+          ownerEmail: ownerEmail.trim(),
+          ownerPassword,
+          courtyardId: appUser!.courtyardId!,
+        }),
       });
 
-      // For MVP: save shop with email, owner creates their own account at login
-      // In production, use server-side Firebase Admin to create user
-      await setAppUser("pending_" + shopId, {
-        email: ownerEmail.trim(),
-        displayName: shopName.trim() + " Owner",
-        role: "shop_owner",
-        courtyardId: appUser!.courtyardId!,
-        shopId,
-      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Failed to create shop");
+        setSaving(false);
+        return;
+      }
 
-      toast.success("Shop added! Owner can register with: " + ownerEmail);
+      toast.success("Shop created! Owner can login with: " + ownerEmail);
       setShopName("");
       setShopDesc("");
       setOwnerEmail("");

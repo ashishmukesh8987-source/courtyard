@@ -49,6 +49,16 @@ export async function createCourtyard(data: Omit<Courtyard, "id" | "createdAt">)
   return ref.id;
 }
 
+export async function getCourtyardsByAdmin(adminUid: string): Promise<Courtyard[]> {
+  const q = query(collection(db, "courtyards"), where("adminUid", "==", adminUid));
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+    createdAt: toDate(d.data().createdAt),
+  })) as Courtyard[];
+}
+
 export async function updateCourtyard(id: string, data: Partial<Courtyard>): Promise<void> {
   await updateDoc(doc(db, "courtyards", id), data);
 }
@@ -199,6 +209,42 @@ export function onOrderById(orderId: string, callback: (order: Order | null) => 
       createdAt: toDate(d.data().createdAt),
       updatedAt: toDate(d.data().updatedAt),
     } as Order);
+  });
+}
+
+// --- Waiter Calls ---
+export interface WaiterCall {
+  id: string;
+  shopId: string;
+  courtyardId: string;
+  tableNumber: string;
+  status: "pending" | "acknowledged";
+  createdAt: Date;
+}
+
+export function onWaiterCallsForShop(
+  shopId: string,
+  callback: (calls: WaiterCall[]) => void
+) {
+  const q = query(
+    collection(db, "waiterCalls"),
+    where("shopId", "==", shopId),
+    where("status", "==", "pending"),
+    orderBy("createdAt", "desc")
+  );
+  return onSnapshot(q, (snap) => {
+    const calls = snap.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
+      createdAt: toDate(d.data().createdAt),
+    })) as WaiterCall[];
+    callback(calls);
+  });
+}
+
+export async function acknowledgeWaiterCall(callId: string): Promise<void> {
+  await updateDoc(doc(db, "waiterCalls", callId), {
+    status: "acknowledged",
   });
 }
 
