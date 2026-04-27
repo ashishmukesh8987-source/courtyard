@@ -94,15 +94,15 @@ export default function ShopInsightsPage() {
   )[0];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-charcoal sticky top-0 z-10">
         <div className="mx-auto max-w-3xl px-4 py-4 flex items-center gap-3">
-          <Link href="/shop/dashboard" className="text-gray-400 hover:text-gray-600">
+          <Link href="/shop/dashboard" className="text-gray-400 hover:text-white">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-orange-600" /> Insights
+          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-accent-500" /> Insights
           </h1>
         </div>
       </div>
@@ -115,17 +115,17 @@ export default function ShopInsightsPage() {
           </h2>
           <div className="grid grid-cols-3 gap-3">
             <Card className="p-4 text-center">
-              <ShoppingBag className="w-5 h-5 mx-auto text-blue-600 mb-1" />
+              <ShoppingBag className="w-5 h-5 mx-auto text-fresh-500 mb-1" />
               <p className="text-2xl font-bold text-gray-900">{todayOrders.length}</p>
               <p className="text-xs text-gray-500">Orders</p>
             </Card>
             <Card className="p-4 text-center">
-              <DollarSign className="w-5 h-5 mx-auto text-green-600 mb-1" />
+              <DollarSign className="w-5 h-5 mx-auto text-fresh-500 mb-1" />
               <p className="text-2xl font-bold text-gray-900">{formatPrice(todayRevenue)}</p>
               <p className="text-xs text-gray-500">Revenue</p>
             </Card>
             <Card className="p-4 text-center">
-              <Clock className="w-5 h-5 mx-auto text-orange-600 mb-1" />
+              <Clock className="w-5 h-5 mx-auto text-accent-500 mb-1" />
               <p className="text-2xl font-bold text-gray-900">
                 {peakHour ? `${peakHour[0]}:00` : "—"}
               </p>
@@ -153,28 +153,28 @@ export default function ShopInsightsPage() {
           <h2 className="font-semibold text-gray-900 mb-3">Key Metrics</h2>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-green-500" />
+              <TrendingUp className="w-4 h-4 text-fresh-500" />
               <div>
                 <p className="text-gray-500">Avg. Order Value</p>
                 <p className="font-semibold text-gray-900">{formatPrice(avgOrderValue)}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="w-4 h-4 text-fresh-500" />
               <div>
                 <p className="text-gray-500">Completed</p>
                 <p className="font-semibold text-gray-900">{completedCount}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-yellow-500" />
+              <Clock className="w-4 h-4 text-mustard-500" />
               <div>
                 <p className="text-gray-500">Active</p>
                 <p className="font-semibold text-gray-900">{pendingCount}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <XCircle className="w-4 h-4 text-red-500" />
+              <XCircle className="w-4 h-4 text-brand-500" />
               <div>
                 <p className="text-gray-500">Cancelled</p>
                 <p className="font-semibold text-gray-900">{cancelledCount}</p>
@@ -191,7 +191,7 @@ export default function ShopInsightsPage() {
               {topItems.map((item, idx) => (
                 <div key={item.name} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-xs font-semibold">
+                    <span className="w-5 h-5 rounded-full bg-brand-100 text-brand-500 flex items-center justify-center text-xs font-semibold">
                       {idx + 1}
                     </span>
                     <span className="text-gray-900">{item.name}</span>
@@ -219,7 +219,7 @@ export default function ShopInsightsPage() {
                 return (
                   <div key={h} className="flex-1 flex flex-col items-center gap-1">
                     <div
-                      className="w-full bg-orange-400 rounded-sm transition-all"
+                      className="w-full bg-accent-500 rounded-sm transition-all"
                       style={{ height: `${height}%` }}
                       title={`${h}:00 — ${count} orders`}
                     />

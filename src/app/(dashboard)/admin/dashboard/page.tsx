@@ -135,16 +135,16 @@ export default function AdminDashboardPage() {
   const activeShops = shops.filter((s) => s.isActive).length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-charcoal">
         <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <Shield className="w-5 h-5 text-gray-700" /> Admin
+          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+            <Shield className="w-5 h-5 text-gray-300" /> Admin
           </h1>
           <button
             onClick={() => { signOut(); router.push("/admin/login"); }}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-white"
           >
             <LogOut className="w-5 h-5" />
           </button>
@@ -199,7 +199,7 @@ export default function AdminDashboardPage() {
                   onClick={() => handleSwitchCourtyard(cy)}
                   className={`text-left rounded-xl border p-4 transition-all ${
                     selectedCourtyard?.id === cy.id
-                      ? "border-orange-500 bg-orange-50 shadow-sm"
+                      ? "border-brand-500 bg-brand-50 shadow-sm"
                       : "border-gray-200 bg-white hover:border-gray-300"
                   }`}
                 >
@@ -218,12 +218,12 @@ export default function AdminDashboardPage() {
           <>
             <div className="grid grid-cols-3 gap-3">
               <Card className="p-4 text-center">
-                <Store className="w-6 h-6 mx-auto text-orange-600 mb-1" />
+                <Store className="w-6 h-6 mx-auto text-brand-500 mb-1" />
                 <p className="text-2xl font-bold text-gray-900">{activeShops}/{shops.length}</p>
                 <p className="text-xs text-gray-500">Active Shops</p>
               </Card>
               <Card className="p-4 text-center">
-                <ShoppingBag className="w-6 h-6 mx-auto text-blue-600 mb-1" />
+                <ShoppingBag className="w-6 h-6 mx-auto text-fresh-500 mb-1" />
                 <p className="text-2xl font-bold text-gray-900">{orderCount}</p>
                 <p className="text-xs text-gray-500">Today&apos;s Orders</p>
               </Card>
@@ -238,8 +238,8 @@ export default function AdminDashboardPage() {
             <Link href="/admin/shops">
               <Card className="p-4 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
-                    <Store className="w-5 h-5 text-orange-600" />
+                  <div className="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center">
+                    <Store className="w-5 h-5 text-brand-500" />
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">Manage Shops</p>

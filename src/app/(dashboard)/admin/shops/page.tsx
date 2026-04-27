@@ -119,15 +119,15 @@ export default function AdminShopsPage() {
   if (authLoading || loading) return <Spinner className="min-h-screen" />;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-charcoal sticky top-0 z-10">
         <div className="mx-auto max-w-2xl px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/admin/dashboard" className="text-gray-400 hover:text-gray-600">
+            <Link href="/admin/dashboard" className="text-gray-400 hover:text-white">
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <h1 className="text-xl font-bold text-gray-900">Manage Shops</h1>
+            <h1 className="text-xl font-bold text-white">Manage Shops</h1>
           </div>
           <Button size="sm" onClick={() => setShowForm(!showForm)}>
             <Plus className="w-4 h-4 mr-1" /> Add Shop
@@ -197,8 +197,8 @@ export default function AdminShopsPage() {
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
-                  <Store className="w-5 h-5 text-orange-600" />
+                <div className="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center">
+                  <Store className="w-5 h-5 text-brand-500" />
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">{shop.name}</p>
@@ -215,7 +215,7 @@ export default function AdminShopsPage() {
                   title={shop.isActive ? "Deactivate" : "Activate"}
                 >
                   {shop.isActive ? (
-                    <ToggleRight className="w-5 h-5 text-green-600" />
+                    <ToggleRight className="w-5 h-5 text-fresh-500" />
                   ) : (
                     <ToggleLeft className="w-5 h-5" />
                   )}

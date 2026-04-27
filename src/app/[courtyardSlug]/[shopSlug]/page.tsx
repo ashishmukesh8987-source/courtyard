@@ -83,14 +83,14 @@ export default function ShopMenuPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-cream pb-24">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-charcoal sticky top-0 z-10">
         <div className="mx-auto max-w-2xl px-4 py-4">
           <div className="flex items-center justify-between mb-2">
             <Link
               href={`/${courtyardSlug}`}
-              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+              className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-white"
             >
               <ArrowLeft className="w-4 h-4" /> {courtyard.name}
             </Link>
@@ -117,15 +117,15 @@ export default function ShopMenuPage() {
                 setCallingWaiter(false);
               }}
               disabled={callingWaiter}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-orange-600 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-accent-500 rounded-lg hover:bg-accent-600 transition-colors disabled:opacity-50"
             >
               <Bell className="w-4 h-4" />
               {callingWaiter ? "Calling..." : "Call Waiter"}
             </button>
           </div>
-          <h1 className="text-xl font-bold text-gray-900">{shop.name}</h1>
+          <h1 className="text-xl font-bold text-white">{shop.name}</h1>
           {shop.description && (
-            <p className="text-sm text-gray-500 mt-0.5">{shop.description}</p>
+            <p className="text-sm text-gray-400 mt-0.5">{shop.description}</p>
           )}
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function ShopMenuPage() {
               placeholder="Search menu..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 transition-colors"
+              className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
             />
           </div>
         )}
@@ -153,7 +153,7 @@ export default function ShopMenuPage() {
               onClick={() => setSelectedCategory("All")}
               className={`flex-shrink-0 px-3 py-1.5 text-sm rounded-full font-medium transition-colors ${
                 selectedCategory === "All"
-                  ? "bg-orange-600 text-white"
+                  ? "bg-brand-500 text-white"
                   : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300"
               }`}
             >
@@ -165,7 +165,7 @@ export default function ShopMenuPage() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`flex-shrink-0 px-3 py-1.5 text-sm rounded-full font-medium transition-colors ${
                   selectedCategory === cat
-                    ? "bg-orange-600 text-white"
+                    ? "bg-brand-500 text-white"
                     : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300"
                 }`}
               >
@@ -195,7 +195,7 @@ export default function ShopMenuPage() {
                         {item.description && (
                           <p className="text-sm text-gray-500 mt-0.5">{item.description}</p>
                         )}
-                        <p className="text-sm font-semibold text-orange-600 mt-1">
+                        <p className="text-sm font-semibold text-brand-500 mt-1">
                           {formatPrice(item.price)}
                         </p>
                       </div>
@@ -204,14 +204,14 @@ export default function ShopMenuPage() {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => updateQuantity(item.id, qty - 1)}
-                              className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center hover:bg-orange-200 transition-colors"
+                              className="w-8 h-8 rounded-full bg-brand-100 text-brand-500 flex items-center justify-center hover:bg-brand-200 transition-colors"
                             >
                               <Minus className="w-4 h-4" />
                             </button>
                             <span className="w-6 text-center font-medium">{qty}</span>
                             <button
                               onClick={() => addItem(item, shop.id)}
-                              className="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center hover:bg-orange-700 transition-colors"
+                              className="w-8 h-8 rounded-full bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600 transition-colors"
                             >
                               <Plus className="w-4 h-4" />
                             </button>
@@ -236,11 +236,11 @@ export default function ShopMenuPage() {
 
       {/* Cart Bar */}
       {itemCount > 0 && cartShopId === shop.id && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-20">
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 z-20">
           <div className="mx-auto max-w-2xl">
             <button
               onClick={() => router.push(`/${courtyardSlug}/${shopSlug}/checkout`)}
-              className="w-full bg-orange-600 text-white rounded-xl py-3.5 px-6 font-medium flex items-center justify-between hover:bg-orange-700 transition-colors"
+              className="w-full bg-brand-500 text-white rounded-xl py-3.5 px-6 font-medium flex items-center justify-between hover:bg-brand-600 transition-colors"
             >
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5" />

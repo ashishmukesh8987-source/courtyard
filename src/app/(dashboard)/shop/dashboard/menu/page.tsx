@@ -160,18 +160,18 @@ export default function MenuManagementPage() {
   }, {});
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-charcoal sticky top-0 z-10">
         <div className="mx-auto max-w-2xl px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link
               href="/shop/dashboard"
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-white"
             >
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <h1 className="text-xl font-bold text-gray-900">Menu</h1>
+            <h1 className="text-xl font-bold text-white">Menu</h1>
             <span className="text-sm text-gray-400">({items.length} items)</span>
           </div>
           <Button size="sm" onClick={() => { resetForm(); setShowForm(true); }}>
@@ -209,7 +209,7 @@ export default function MenuManagementPage() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-colors bg-white"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-colors bg-white"
                   >
                     <option value="">Select category</option>
                     <option value="Starters">Starters</option>
@@ -272,7 +272,7 @@ export default function MenuManagementPage() {
                   >
                     <div>
                       <p className="font-medium text-gray-900">{item.name}</p>
-                      <p className="text-sm text-orange-600 font-semibold">
+                      <p className="text-sm text-brand-500 font-semibold">
                         {formatPrice(item.price)}
                       </p>
                       {item.description && (

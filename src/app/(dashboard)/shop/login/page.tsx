@@ -59,10 +59,10 @@ export default function ShopLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-cream px-4">
       <Card className="w-full max-w-sm p-6">
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-orange-600 text-white mb-3">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-brand-500 text-white mb-3">
             <Store className="w-6 h-6" />
           </div>
           <h1 className="text-xl font-bold text-gray-900">Shop Login</h1>
@@ -88,7 +88,7 @@ export default function ShopLoginPage() {
           </Button>
         </form>
         <div className="mt-6 text-center text-sm text-gray-400">
-          <Link href="/" className="hover:text-orange-600">Back to home</Link>
+          <Link href="/" className="hover:text-brand-500">Back to home</Link>
         </div>
       </Card>
     </div>

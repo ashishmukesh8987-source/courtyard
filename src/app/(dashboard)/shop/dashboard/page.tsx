@@ -93,16 +93,16 @@ export default function ShopDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-charcoal sticky top-0 z-10">
         <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <UtensilsCrossed className="w-5 h-5 text-orange-600" />
+            <h1 className="text-xl font-bold text-white flex items-center gap-2">
+              <UtensilsCrossed className="w-5 h-5 text-brand-500" />
               Orders
               {pendingCount > 0 && (
-                <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">
+                <span className="ml-1 bg-brand-500 text-white text-xs rounded-full px-2 py-0.5">
                   {pendingCount} new
                 </span>
               )}
@@ -110,14 +110,14 @@ export default function ShopDashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <Link href="/shop/dashboard/insights">
-              <Button variant="secondary" size="sm">Insights</Button>
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white hover:bg-white/10">Insights</Button>
             </Link>
             <Link href="/shop/dashboard/menu">
-              <Button variant="secondary" size="sm">Menu</Button>
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white hover:bg-white/10">Menu</Button>
             </Link>
             <button
               onClick={() => { signOut(); router.push("/shop/login"); }}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-white"
             >
               <LogOut className="w-5 h-5" />
             </button>
@@ -131,8 +131,8 @@ export default function ShopDashboardPage() {
               onClick={() => setFilter(f)}
               className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
                 filter === f
-                  ? "bg-orange-100 text-orange-700"
-                  : "text-gray-500 hover:bg-gray-100"
+                  ? "bg-brand-500 text-white"
+                  : "text-gray-400 hover:bg-white/10 hover:text-gray-200"
               }`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}

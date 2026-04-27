@@ -70,14 +70,14 @@ export default function OrderTrackingPage() {
   const isCancelled = order.status === "cancelled";
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-charcoal">
         <div className="mx-auto max-w-2xl px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Order Status</h1>
-              <p className="text-sm text-gray-500 mt-0.5">{order.shopName}</p>
+              <h1 className="text-xl font-bold text-white">Order Status</h1>
+              <p className="text-sm text-gray-400 mt-0.5">{order.shopName}</p>
             </div>
             <Badge status={order.status} />
           </div>
@@ -98,7 +98,7 @@ export default function OrderTrackingPage() {
                       <div
                         className={`w-10 h-10 rounded-full flex items-center justify-center ${
                           isActive
-                            ? "bg-orange-600 text-white"
+                            ? "bg-brand-500 text-white"
                             : "bg-gray-100 text-gray-400"
                         }`}
                       >
@@ -107,7 +107,7 @@ export default function OrderTrackingPage() {
                       {idx < steps.length - 1 && (
                         <div
                           className={`w-0.5 h-6 mt-1 ${
-                            idx < currentIdx ? "bg-orange-600" : "bg-gray-200"
+                            idx < currentIdx ? "bg-brand-500" : "bg-gray-200"
                           }`}
                         />
                       )}
@@ -178,7 +178,7 @@ export default function OrderTrackingPage() {
         </Card>
 
         <div className="text-center">
-          <Link href="/" className="text-sm text-orange-600 hover:underline">
+          <Link href="/" className="text-sm text-brand-500 hover:underline">
             Back to home
           </Link>
         </div>

@@ -58,10 +58,10 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-cream px-4">
       <Card className="w-full max-w-sm p-6">
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gray-900 text-white mb-3">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-charcoal text-white mb-3">
             <Shield className="w-6 h-6" />
           </div>
           <h1 className="text-xl font-bold text-gray-900">Admin Login</h1>
@@ -87,7 +87,7 @@ export default function AdminLoginPage() {
           </Button>
         </form>
         <div className="mt-6 text-center text-sm text-gray-400">
-          <Link href="/" className="hover:text-orange-600">Back to home</Link>
+          <Link href="/" className="hover:text-brand-500">Back to home</Link>
         </div>
       </Card>
     </div>

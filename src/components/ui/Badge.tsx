@@ -1,11 +1,11 @@
 import type { OrderStatus } from "@/types";
 
 const statusConfig: Record<OrderStatus, { bg: string; text: string; label: string }> = {
-  pending: { bg: "bg-yellow-100", text: "text-yellow-800", label: "Pending" },
-  preparing: { bg: "bg-blue-100", text: "text-blue-800", label: "Preparing" },
-  ready: { bg: "bg-green-100", text: "text-green-800", label: "Ready" },
+  pending: { bg: "bg-mustard-100", text: "text-earth-500", label: "Pending" },
+  preparing: { bg: "bg-accent-100", text: "text-accent-600", label: "Preparing" },
+  ready: { bg: "bg-fresh-100", text: "text-fresh-600", label: "Ready" },
   completed: { bg: "bg-gray-100", text: "text-gray-800", label: "Completed" },
-  cancelled: { bg: "bg-red-100", text: "text-red-800", label: "Cancelled" },
+  cancelled: { bg: "bg-brand-100", text: "text-brand-600", label: "Cancelled" },
 };
 
 export default function Badge({ status }: { status: OrderStatus }) {

@@ -23,10 +23,10 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+    <div className="min-h-screen bg-gradient-to-br from-cream to-brand-50">
       <div className="mx-auto max-w-4xl px-4 py-12">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-orange-600 text-white mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-500 text-white mb-4">
             <UtensilsCrossed className="w-8 h-8" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900">Baithaki</h1>
@@ -44,7 +44,7 @@ export default function HomePage() {
               placeholder="Search food courts..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 transition-colors"
+              className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
             />
           </div>
         )}
@@ -78,14 +78,14 @@ export default function HomePage() {
 
         <div className="mt-16 flex justify-center gap-6 text-sm text-gray-400">
           {user && (
-            <Link href="/my-orders" className="hover:text-orange-600 transition-colors flex items-center gap-1">
+            <Link href="/my-orders" className="hover:text-brand-500 transition-colors flex items-center gap-1">
               <ShoppingBag className="w-3.5 h-3.5" /> My Orders
             </Link>
           )}
-          <Link href="/shop/login" className="hover:text-orange-600 transition-colors">
+          <Link href="/shop/login" className="hover:text-brand-500 transition-colors">
             Shop Login
           </Link>
-          <Link href="/admin/login" className="hover:text-orange-600 transition-colors">
+          <Link href="/admin/login" className="hover:text-brand-500 transition-colors">
             Admin Login
           </Link>
         </div>

@@ -2,6 +2,43 @@
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
+
+  /* Brand — Tomato Red */
+  --color-brand-50: #fef2f3;
+  --color-brand-100: #fde6e8;
+  --color-brand-200: #fbd0d4;
+  --color-brand-500: #E63946;
+  --color-brand-600: #d42f3c;
+  --color-brand-700: #b22530;
+
+  /* Accent — Warm Orange */
+  --color-accent-50: #fef7ee;
+  --color-accent-100: #fdecd4;
+  --color-accent-500: #F4A261;
+  --color-accent-600: #e08f4e;
+
+  /* Fresh — Green */
+  --color-fresh-50: #eefaf8;
+  --color-fresh-100: #d5f0ec;
+  --color-fresh-500: #2A9D8F;
+  --color-fresh-600: #238780;
+  --color-fresh-700: #1d706a;
+
+  /* Mustard — Yellow */
+  --color-mustard-50: #fdf9ee;
+  --color-mustard-100: #faf0d2;
+  --color-mustard-500: #E9C46A;
+
+  /* Earth — Deep Brown */
+  --color-earth-100: #f0e6e0;
+  --color-earth-500: #6D4C41;
+  --color-earth-600: #5d3f36;
+
+  /* Cream White background */
+  --color-cream: #FFF8F0;
+
+  /* Charcoal Gray for nav/headers */
+  --color-charcoal: #2B2D42;
 }
 
 /* Prevent iOS auto-zoom on input focus */

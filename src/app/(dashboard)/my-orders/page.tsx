@@ -55,7 +55,7 @@ export default function MyOrdersPage() {
       <div className="min-h-screen flex flex-col items-center justify-center text-gray-500 px-4">
         <ShoppingBag className="w-12 h-12 mb-3 text-gray-300" />
         <p className="mb-2">Sign in to see your order history</p>
-        <Link href="/" className="text-orange-600 text-sm hover:underline">
+        <Link href="/" className="text-brand-500 text-sm hover:underline">
           Back to home
         </Link>
       </div>
@@ -63,17 +63,17 @@ export default function MyOrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-charcoal">
         <div className="mx-auto max-w-2xl px-4 py-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-2"
+            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-white mb-2"
           >
             <ArrowLeft className="w-4 h-4" /> Home
           </Link>
-          <h1 className="text-xl font-bold text-gray-900">My Orders</h1>
+          <h1 className="text-xl font-bold text-white">My Orders</h1>
         </div>
       </div>
 

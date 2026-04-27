@@ -37,7 +37,7 @@ export default function CourtyardPage() {
       <div className="min-h-screen flex items-center justify-center text-gray-500">
         <div className="text-center">
           <p className="text-lg">Food court not found.</p>
-          <Link href="/" className="text-orange-600 mt-2 inline-block">
+          <Link href="/" className="text-brand-500 mt-2 inline-block">
             Go home
           </Link>
         </div>
@@ -46,18 +46,18 @@ export default function CourtyardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-charcoal">
         <div className="mx-auto max-w-2xl px-4 py-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-white mb-4"
           >
             <ArrowLeft className="w-4 h-4" /> Back
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">{courtyard.name}</h1>
-          <p className="text-sm text-gray-500 mt-1">{courtyard.address}</p>
+          <h1 className="text-2xl font-bold text-white">{courtyard.name}</h1>
+          <p className="text-sm text-gray-400 mt-1">{courtyard.address}</p>
         </div>
       </div>
 
@@ -79,7 +79,7 @@ export default function CourtyardPage() {
               placeholder="Search stalls..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 transition-colors"
+              className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
             />
           </div>
         )}
@@ -106,8 +106,8 @@ export default function CourtyardPage() {
                       className="w-16 h-16 rounded-lg object-cover"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-lg bg-orange-100 flex items-center justify-center">
-                      <Store className="w-7 h-7 text-orange-600" />
+                    <div className="w-16 h-16 rounded-lg bg-brand-100 flex items-center justify-center">
+                      <Store className="w-7 h-7 text-brand-500" />
                     </div>
                   )}
                   <div>
